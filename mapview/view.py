@@ -12,11 +12,11 @@ from kivy.uix.label import Label
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.properties import NumericProperty, ObjectProperty, ListProperty, \
     AliasProperty, BooleanProperty, StringProperty
-from kivy.graphics import Canvas, Color, Rectangle, Ellipse, Line
+from kivy.graphics import Canvas, Color, Rectangle
 from kivy.graphics.transformation import Matrix
 from kivy.lang import Builder
 from kivy.compat import string_types
-from math import ceil,hypot,cos,sin,atan,radians, degrees #HC
+from math import ceil,hypot,cos,sin,radians #HC
 from mapview import MIN_LONGITUDE, MAX_LONGITUDE, MIN_LATITUDE, MAX_LATITUDE, \
     CACHE_DIR, Coordinate, Bbox
 from mapview.source import MapSource
@@ -46,7 +46,7 @@ Builder.load_string("""
         StencilUnUse
         Rectangle:
             pos: self.pos
-            size: self.size          
+            size: self.size
         StencilPop
     Label:
         text: root.map_source.attribution if hasattr(root.map_source, "attribution") else ""
@@ -351,7 +351,6 @@ class MapView(Widget):
             raise Exception("Invalid argument for center_on")
         lon = clamp(lon, MIN_LONGITUDE, MAX_LONGITUDE)
         lat = clamp(lat, MIN_LATITUDE, MAX_LATITUDE)
-        #scale = self._scatter.scale HC
     
         self._scatter.pos =(0,0) #HC
         x = map_source.get_x(zoom, lon) - (self._scatter.to_local(self.center[0],self.center[1])[0] ) #/ scale #HC 
@@ -715,7 +714,6 @@ class MapView(Widget):
         Clock.schedule_once(self.do_update, -1)
 
     def do_update(self, dt): 
-            
         zoom = self._zoom
         scale = self._scale
         self.lon = self.map_source.get_lon(zoom,
@@ -793,8 +791,7 @@ class MapView(Widget):
         scale = self._scale
 
         vx, vy, w, h = self._rotate_viewport(vx, vy, w, h) #HC   
-        #print "bbfz : a {}, vx {}, vy {}, w {}, h {}, zoom {}, size {}, scale {}".format(self._scatter.rotation, vx,vy,w,h,zoom,size,scale)
-        
+       
         max_x_end = map_source.get_col_count(zoom)
         max_y_end = map_source.get_row_count(zoom)
 
@@ -822,8 +819,7 @@ class MapView(Widget):
         size = map_source.dp_tile_size
         
         tile_x_first, tile_y_first, tile_x_last, tile_y_last, \
-            x_count, y_count = bbox_for_zoom(vx, vy, self.width, self.height, zoom) 
-
+            x_count, y_count = bbox_for_zoom(vx, vy, self.width, self.height, zoom)
         #print "Range {},{} to {},{}".format(
         #    tile_x_first, tile_y_first,
         #    tile_x_last, tile_y_last)
@@ -834,8 +830,8 @@ class MapView(Widget):
             tile_y = tile.tile_y
 
             f = 2 ** (zoom - tile.zoom)
-            w = self.width / f 
-            h = self.height / f 
+            w = self.width / f
+            h = self.height / f
             btile_x_first, btile_y_first, btile_x_last, btile_y_last, \
                 _, _ = bbox_for_zoom(vx / f, vy / f, w, h, tile.zoom)
 
@@ -852,7 +848,6 @@ class MapView(Widget):
             tile.pos = (
                 tile_x * tsize  + self.delta_x,
                 tile_y * tsize  + self.delta_y) #HC
-        
         # Get rid of old tiles first
         for tile in self._tiles[:]:
             tile_x = tile.tile_x
@@ -903,8 +898,8 @@ class MapView(Widget):
     def load_tile_for_source(self, map_source, opacity, size, x, y, zoom):
         tile = Tile(size=(size, size))
         tile.g_color = Color(1, 1, 1, 0)
-        tile.tile_x = x 
-        tile.tile_y = y 
+        tile.tile_x = x
+        tile.tile_y = y
         tile.zoom = zoom
         tile.pos = x * size  + self.delta_x , y * size  + self.delta_y  #HC
         tile.map_source = map_source
@@ -914,11 +909,6 @@ class MapView(Widget):
         self.canvas_map.add(tile.g_color)
         self.canvas_map.add(tile)
         self._tiles.append(tile)
-        #HC
-        #lab=Label(text="{},{}".format(x,y), color=(0,0,1,1))
-        #lab.pos=tile.pos
-        #self._scatter.add_widget(lab)
-
 
     def move_tiles_to_background(self):
         # remove all the tiles of the main map to the background map
