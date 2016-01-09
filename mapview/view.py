@@ -8,7 +8,6 @@ from kivy.metrics import dp
 from kivy.uix.widget import Widget
 from kivy.uix.image import Image
 from kivy.uix.scatter import Scatter
-from kivy.uix.label import Label
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.properties import NumericProperty, ObjectProperty, ListProperty, \
     AliasProperty, BooleanProperty, StringProperty
@@ -817,7 +816,6 @@ class MapView(Widget):
         dirs = [0, 1, 0, -1, 0]
         bbox_for_zoom = self.bbox_for_zoom
         size = map_source.dp_tile_size
-        
         tile_x_first, tile_y_first, tile_x_last, tile_y_last, \
             x_count, y_count = bbox_for_zoom(vx, vy, self.width, self.height, zoom)
         #print "Range {},{} to {},{}".format(
@@ -862,8 +860,8 @@ class MapView(Widget):
                 self.canvas_map.remove(tile.g_color)
             else:
                 tile.size = (size, size)
-                tile.pos = (tile_x * size  + self.delta_x, tile_y * size  + self.delta_y) #HC
-
+                tile.pos = (tile_x * size + self.delta_x, tile_y * size + self.delta_y) #HC
+                
         # Load new tiles if needed       
         
         x = tile_x_first + x_count // 2
