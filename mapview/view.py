@@ -40,7 +40,6 @@ Builder.load_string("""
         Rectangle:
             pos: self.pos
             size: self.size
-  
     canvas.after:
         StencilUnUse
         Rectangle:
@@ -251,7 +250,7 @@ class MapView(Widget):
     :meth:`MapSource.get_max_zoom`. Default to 0.
     """
     angle = NumericProperty(0)
-    """Angle of map inside the widget. 0 means up, 90 means right, ... Default to 0.
+    """Angle of map inside the widget. 0 means right, 90 means up, ... Default to 0.
     """
 
     map_source = ObjectProperty(MapSource())
@@ -350,15 +349,13 @@ class MapView(Widget):
             raise Exception("Invalid argument for center_on")
         lon = clamp(lon, MIN_LONGITUDE, MAX_LONGITUDE)
         lat = clamp(lat, MIN_LATITUDE, MAX_LATITUDE)
-    
         self._scatter.pos =(0,0) #HC
         x = map_source.get_x(zoom, lon) - (self._scatter.to_local(self.center[0],self.center[1])[0] ) #/ scale #HC 
         y = map_source.get_y(zoom, lat) - (self._scatter.to_local(self.center[0],self.center[1])[1] ) #/ scale  #HC
         self.delta_x = -x
         self.delta_y = -y
         self.lon = lon
-        self.lat = lat
-        
+        self.lat = lat 
         self.trigger_update(True)
 
     def set_zoom_at(self, zoom, x, y, scale=None):
@@ -397,9 +394,6 @@ class MapView(Widget):
             y = self.map_source.get_y(zoom, self.lat) - (self._scatter.to_local(self.center[0],self.center[1])[1] ) #/ scale  #HC
             self.delta_x = -x
             self.delta_y = -y
-            #self.delta_x = scatter.x + self.delta_x * f
-            #self.delta_y = scatter.y  + self.delta_y * f
-            
 
         # avoid triggering zoom changes.
         self._zoom = zoom
@@ -418,9 +412,12 @@ class MapView(Widget):
         if angle == self._angle:
             return
         scatter = self._scatter
-        scatter.apply_transform(Matrix().rotate(radians(1), 0, 0, 1), post_multiply=False, anchor=(int(400),int(300)))        
+        scatter.apply_transform(Matrix().rotate(radians(angle - self._angle), 0, 0, 1), \
+        post_multiply=False, anchor=self._scatter.to_local(self.center[0],self.center[1]))        
 
         self._angle = angle
+        self.angle = self._angle
+        self.center_on(self.lat, self.lon)
         
     def get_latlon_at(self, x, y, zoom=None):
         """Return the current :class:`Coordinate` within the (x, y) scatter
@@ -844,15 +841,15 @@ class MapView(Widget):
             tsize = size * f
             tile.size = tsize, tsize
             tile.pos = (
-                tile_x * tsize  + self.delta_x,
-                tile_y * tsize  + self.delta_y) #HC
+                tile_x * tsize + self.delta_x,
+                tile_y * tsize + self.delta_y) #HC
         # Get rid of old tiles first
         for tile in self._tiles[:]:
             tile_x = tile.tile_x
             tile_y = tile.tile_y
 
             if tile_x < tile_x_first or tile_x > tile_x_last or \
-               tile_y < tile_y_first or tile_y > tile_y_last:
+               tile_y < tile_y_first or tile_y > tile_y_last: #HC
                 tile.state = "done"
                 self.tile_map_set(tile_x, tile_y, False)
                 self._tiles.remove(tile)
@@ -899,7 +896,7 @@ class MapView(Widget):
         tile.tile_x = x
         tile.tile_y = y
         tile.zoom = zoom
-        tile.pos = x * size  + self.delta_x , y * size  + self.delta_y  #HC
+        tile.pos = (x * size + self.delta_x , y * size  + self.delta_y)
         tile.map_source = map_source
         tile.state = "loading"
         if not self._pause:
