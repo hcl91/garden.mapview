@@ -15,7 +15,7 @@ from kivy.graphics import Canvas, Color, Rectangle
 from kivy.graphics.transformation import Matrix
 from kivy.lang import Builder
 from kivy.compat import string_types
-from math import ceil,hypot,cos,sin,radians #HC
+from math import ceil,cos,sin,radians #HC
 from mapview import MIN_LONGITUDE, MAX_LONGITUDE, MIN_LATITUDE, MAX_LATITUDE, \
     CACHE_DIR, Coordinate, Bbox
 from mapview.source import MapSource
@@ -85,7 +85,9 @@ class Tile(Rectangle):
         return join(CACHE_DIR, fn)
 
     def set_source(self, cache_fn):
-        self.source = cache_fn
+        try:
+            self.source = cache_fn
+        except: pass
         self.state = "need-animation"
 
 
@@ -711,7 +713,7 @@ class MapView(Widget):
 
     def do_update(self, dt): 
         zoom = self._zoom
-        scale = self._scale
+        
         self.lon = self.map_source.get_lon(zoom,
                 (self._scatter.to_local(self.center[0],self.center[1])[0]) - self.delta_x) #HC
         self.lat = self.map_source.get_lat(zoom,
