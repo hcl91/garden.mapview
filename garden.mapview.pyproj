@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{55069797-912f-447b-9d8b-2d3cf919d247}</ProjectGuid>
+    <ProjectHome />
+    <StartupFile>__init__.py</StartupFile>
+    <SearchPath />
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <InterpreterId />
+    <InterpreterVersion />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <PropertyGroup>
+    <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
+    <PtvsTargetsFile>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets</PtvsTargetsFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="mapview\icons\marker.png" />
+    <Content Include="requirements.txt" />
+    <Content Include="screenshot.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="docs\source\conf.py" />
+    <Compile Include="examples\map_browser.py" />
+    <Compile Include="examples\map_with_marker_popup.py" />
+    <Compile Include="examples\simple_geojson.py" />
+    <Compile Include="examples\simple_map.py" />
+    <Compile Include="examples\simple_mbtiles.py" />
+    <Compile Include="mapview\downloader.py" />
+    <Compile Include="mapview\geojson.py" />
+    <Compile Include="mapview\mbtsource.py" />
+    <Compile Include="mapview\source.py" />
+    <Compile Include="mapview\types.py" />
+    <Compile Include="mapview\utils.py" />
+    <Compile Include="mapview\view.py" />
+    <Compile Include="mapview\__init__.py" />
+    <Compile Include="__init__.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="docs\" />
+    <Folder Include="docs\source" />
+    <Folder Include="examples" />
+    <Folder Include="mapview" />
+    <Folder Include="mapview\icons" />
+  </ItemGroup>
+  <Import Project="$(PtvsTargetsFile)" Condition="Exists($(PtvsTargetsFile))" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="!Exists($(PtvsTargetsFile))" />
+</Project>
